@@ -109,7 +109,7 @@ function DashboardScreen() {
         <p className="text-[7px] font-semibold uppercase tracking-wider opacity-60 mb-1">AI Insight</p>
         <p className="text-[9px] leading-relaxed">Activity decreased by 15% this week.</p>
       </div>
-      <p className="text-[7px] font-semibold text-muted/60 uppercase tracking-wider">Today's Plan</p>
+      <p className="text-[7px] font-semibold text-muted/60 uppercase tracking-wider">Today&apos;s Plan</p>
       {[{ l: 'Morning Walk', d: true }, { l: 'Breakfast', d: true }, { l: 'Omega 2 Tablet', d: false }].map(({ l, d }) => (
         <div key={l} className="flex items-center gap-2">
           <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${d ? 'bg-violet-500 border-violet-500' : 'border-stone-300'}`}>
@@ -140,7 +140,7 @@ function AIAssistantScreen() {
         <div className="self-start flex gap-1.5">
           <div className="w-5 h-5 rounded-full bg-violet-100 flex items-center justify-center text-[8px] shrink-0 mt-0.5">🐾</div>
           <div className="bg-stone-100 text-[8.5px] text-ink rounded-2xl rounded-tl-sm px-2.5 py-1.5 max-w-[78%] leading-relaxed">
-            Based on Sugar's history, it might be skin sensitivity.
+            Based on Sugar&apos;s history, it might be skin sensitivity.
           </div>
         </div>
         {['Keep fur moisturised', 'Check for diet triggers', 'Monitor for 2–3 days'].map(item => (
@@ -539,7 +539,7 @@ function ProblemSection() {
                 <span className="font-normal text-muted/60">02</span> The Problem
               </p>
               <h2 className="font-serif text-[2.2rem] font-medium leading-[1.1] tracking-tight text-ink">
-                Pet owners rely on fragmented tools to manage their pet's wellbeing.
+                Pet owners rely on fragmented tools to manage their pet&apos;s wellbeing.
               </h2>
               {/* tangled scribble — bigger */}
               <div className="mt-4 opacity-30">
@@ -791,7 +791,7 @@ function ResearchSection() {
             <div>
               <p className="text-[13px] font-semibold text-violet-600 mb-4">Core Insight</p>
               <p className="font-serif text-[1.25rem] font-medium text-ink leading-snug">
-                Pet owners don't just need information. They need help building and maintaining care habits.
+                Pet owners don&apos;t just need information. They need help building and maintaining care habits.
               </p>
             </div>
             <div className="flex justify-end mt-6">
@@ -906,7 +906,7 @@ function OnboardingSection() {
             </h2>
 
             <div className="rounded-2xl border border-violet-100 bg-white/80 backdrop-blur-sm px-4 py-4 shadow-[0_10px_26px_rgba(76,29,149,0.07)] mb-5">
-              <p className="text-[15px] leading-relaxed text-[#322d4a] font-medium">The challenge wasn't collecting information.</p>
+              <p className="text-[15px] leading-relaxed text-[#322d4a] font-medium">The challenge wasn&apos;t collecting information.</p>
               <p className="text-[15px] leading-relaxed text-[#5a5176] mt-1.5">It was collecting enough context for personalization without creating onboarding fatigue.</p>
             </div>
 
@@ -1343,7 +1343,7 @@ function DashboardSection() {
             Built to simplify care<br />and strengthen the bond.
           </p>
           <div className="flex items-start gap-2">
-            <span className="font-serif text-5xl text-violet-200 leading-none select-none mt-1">"</span>
+            <span className="font-serif text-5xl text-violet-200 leading-none select-none mt-1">&quot;</span>
             <p className="font-serif italic text-[14px] text-[#9896a8] mt-4 max-w-[520px] leading-relaxed">
               Our goal was simple: make pet care feel less overwhelming, and more connected.
             </p>
@@ -1372,7 +1372,7 @@ function AIAssistantSection() {
           <span className="w-1.5 h-1.5 rounded-full bg-violet-400 inline-block" />07 — AI Pet Assistant
         </motion.p>
         <motion.h2 {...fadeUp(0.08)} className="font-serif text-[2.2rem] font-medium tracking-tightest text-ink mb-3">Not a chatbot. A context engine.</motion.h2>
-        <motion.p {...fadeUp(0.14)} className="text-[14px] text-muted mb-12 max-w-[420px]">Contextual AI that understands your pet's full history — not just your last question.</motion.p>
+        <motion.p {...fadeUp(0.14)} className="text-[14px] text-muted mb-12 max-w-[420px]">Contextual AI that understands your pet&apos;s full history — not just your last question.</motion.p>
         <div className="flex flex-col lg:flex-row gap-16 items-start">
           <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '180px' }} transition={{ duration: 0.45 }} className="flex-shrink-0">
             <PhoneMockup><AIAssistantScreen /></PhoneMockup>

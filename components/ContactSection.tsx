@@ -133,13 +133,13 @@ export default function ContactSection() {
                 className: cardClassName,
               }
 
-              return option.href ? (
+              return 'href' in option ? (
                 <motion.a
                   key={option.title}
                   {...animationProps}
                   href={option.href}
-                  target={option.external ? '_blank' : undefined}
-                  rel={option.external ? 'noreferrer' : undefined}
+                  target={'external' in option && option.external ? '_blank' : undefined}
+                  rel={'external' in option && option.external ? 'noreferrer' : undefined}
                   aria-label={`${option.title}: ${option.subtitle}`}
                 >
                   {content}

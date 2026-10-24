@@ -676,11 +676,9 @@ export default function HeroSection() {
               {/* Portrait — no box, no rounding, blends into bg */}
               <motion.div
                 animate={{scale: portraitHovered ? 1.02 : 1}}
-                transition={{duration:0.65,ease:EASE}}
                 className="relative z-20"
                 initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}}
                 viewport={{once:true}}
-                //@ts-ignore
                 transition={{duration:0.9,delay:0.42,ease:'easeOut'}}
                 style={{
                   width:'clamp(600px,72vw,820px)',
