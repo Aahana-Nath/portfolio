@@ -478,7 +478,7 @@ export default function TalkToMeExperienceSection() {
   }
 
   return (
-    <section className="relative bg-[#f3efe8] py-9 md:py-12 overflow-hidden">
+    <section id="talk-experience" className="relative scroll-mt-16 bg-[#f3efe8] py-9 md:py-12 overflow-hidden">
       <div aria-hidden className="pointer-events-none absolute -top-24 -left-24 w-[420px] h-[420px] rounded-full blur-3xl" style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%)' }} />
       <div aria-hidden className="pointer-events-none absolute top-1/3 right-0 w-[520px] h-[520px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.06) 0%, transparent 72%)' }} />
 

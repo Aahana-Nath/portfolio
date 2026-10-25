@@ -1,7 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import { useId, useState } from 'react'
 import { motion } from 'framer-motion'
+import { Orbit, Rocket, Sparkles } from 'lucide-react'
 
 // ─── Tiny SVG icons ──────────────────────────────────────────────────────
 function IconArrowUpRight() {
@@ -67,17 +69,40 @@ function FlowDiagram() {
           icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="3" stroke="currentColor" strokeWidth="1.3" /><path d="M6.5 5.5L11 8L6.5 10.5V5.5Z" fill="currentColor" /></svg>}
           title="Customised Output" desc="Get product-specific videos ready to use." />
       </div>
+    </div>
+  )
+}
 
-      {/* Looping connector: output feeds back into a new reference */}
-      <div className="relative w-full h-8">
-        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 24" preserveAspectRatio="none" fill="none">
-          <path d="M92 2 L10 2 Q2 2 2 10 L2 14" stroke="#c4b5fd" strokeWidth="1" strokeDasharray="3 3" fill="none" />
-          <polygon points="2,20 -1.5,13 5.5,13" fill="#c4b5fd" />
-        </svg>
-        <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 inline-flex items-center rounded-full bg-violet-50 border border-violet-100 text-violet-600 text-[10.5px] font-medium italic px-3 py-1 whitespace-nowrap">
-          Same story. Your product.
-        </span>
-      </div>
+function ProjectBubble({ children, comingSoon = false, placement = 'bottom' }: { children: React.ReactNode; comingSoon?: boolean; placement?: 'bottom' | 'right' }) {
+  const [showBubble, setShowBubble] = useState(false)
+  const tooltipId = useId()
+
+  return (
+    <div
+      className={`relative h-full ${placement === 'right' ? 'mb-4' : 'pb-14'}`}
+      aria-describedby={showBubble ? tooltipId : undefined}
+      onMouseEnter={() => setShowBubble(true)}
+      onMouseLeave={() => setShowBubble(false)}
+      onFocus={() => setShowBubble(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setShowBubble(false)
+      }}
+      onClick={() => setShowBubble(true)}
+      onKeyDown={(event) => { if (event.key === 'Escape') setShowBubble(false) }}
+    >
+      {children}
+      {showBubble && (
+        <div
+          id={tooltipId}
+          role="tooltip"
+          className={`pointer-events-none absolute z-20 inline-flex min-h-9 w-max max-w-[calc(100%_-_8px)] items-center gap-2 rounded-lg border border-cyan-300/40 bg-[#151923] px-3 py-2 text-center text-[11px] leading-tight text-white shadow-[0_4px_18px_rgba(34,211,238,0.14)] ${placement === 'right' ? 'right-3 top-1/2 -translate-y-1/2 2xl:left-full 2xl:right-auto 2xl:ml-3' : 'bottom-1 left-1/2 -translate-x-1/2'}`}
+        >
+          <span aria-hidden="true" className={`absolute bg-cyan-400/60 ${placement === 'right' ? '-left-2 top-1/2 h-px w-2' : '-top-2 left-1/2 h-2 w-px'}`} />
+          {comingSoon ? <Orbit aria-hidden="true" className="h-4 w-4 shrink-0 text-cyan-300" /> : <Rocket aria-hidden="true" className="h-4 w-4 shrink-0 text-cyan-300" />}
+          <span>{comingSoon ? 'In progress · Coming soon' : 'Click to explore'}</span>
+          <Sparkles aria-hidden="true" className="h-3 w-3 shrink-0 text-amber-200" />
+        </div>
+      )}
     </div>
   )
 }
@@ -90,16 +115,18 @@ interface SmallCardProps {
   tagColor: string
   delay?: number
   mockup?: React.ReactNode
+  comingSoon?: boolean
 }
-function SmallCard({ title, description, tags, tagColor, delay = 0, mockup }: SmallCardProps) {
+function SmallCard({ title, description, tags, tagColor, delay = 0, mockup, comingSoon = false }: SmallCardProps) {
   return (
+    <ProjectBubble comingSoon={comingSoon}>
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '180px' }}
       transition={{ duration: 0.38, delay, ease: [0.25, 0.1, 0.25, 1] }}
       whileHover={{ y: -6, boxShadow: '0 24px 64px rgba(0,0,0,0.10)', transition: { duration: 0.12 } }}
-      className="group relative flex flex-col overflow-hidden rounded-2xl border border-stone-200/80 bg-white/60 backdrop-blur-sm p-7 cursor-default"
+      className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border border-stone-200/80 bg-white/60 backdrop-blur-sm p-7 ${comingSoon ? 'cursor-pointer' : 'cursor-default'}`}
     >
       {/* Mock visual strip */}
       {mockup ? (
@@ -121,6 +148,8 @@ function SmallCard({ title, description, tags, tagColor, delay = 0, mockup }: Sm
           {tags[0]} / {tags[1]}
         </span>
         <motion.button
+          type="button"
+          aria-label={comingSoon ? `${title}: coming soon` : `View ${title} case study`}
           whileHover={{ scale: 1.12, transition: { duration: 0.1 } }}
           whileTap={{ scale: 0.94 }}
           className="flex items-center justify-center w-9 h-9 rounded-full border border-stone-200/80 bg-white/80 text-muted hover:text-ink hover:border-stone-300 transition-colors duration-100"
@@ -129,6 +158,7 @@ function SmallCard({ title, description, tags, tagColor, delay = 0, mockup }: Sm
         </motion.button>
       </div>
     </motion.div>
+    </ProjectBubble>
   )
 }
 
@@ -275,14 +305,15 @@ function MockChonkers() {
 
 function ChonkersCard({ delay = 0 }: { delay?: number }) {
   return (
-    <Link href="/work/chonkers" className="block">
+    <ProjectBubble>
+    <Link href="/work/chonkers" className="block h-full">
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '180px' }}
       transition={{ duration: 0.38, delay, ease: [0.25, 0.1, 0.25, 1] }}
       whileHover={{ y: -7, boxShadow: '0 24px 60px rgba(251,191,36,0.12), 0 8px 24px rgba(0,0,0,0.08)', transition: { duration: 0.12 } }}
-      className="group relative flex flex-col overflow-hidden rounded-2xl border border-amber-200/50 bg-gradient-to-br from-white/70 to-amber-50/40 backdrop-blur-sm p-7 cursor-default"
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-amber-200/50 bg-gradient-to-br from-white/70 to-amber-50/40 backdrop-blur-sm p-7 cursor-default"
     >
       {/* Warm glow on hover */}
       <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-150"
@@ -324,6 +355,7 @@ function ChonkersCard({ delay = 0 }: { delay?: number }) {
       </div>
     </motion.div>
     </Link>
+    </ProjectBubble>
   )
 }
 
@@ -403,6 +435,7 @@ export default function WorkSection() {
         </div>
 
         {/* ── Featured Flagship Card ── */}
+        <ProjectBubble placement="right">
         <Link href="/work/ai-video" className="block">
         <motion.div
           initial={{ opacity: 0, y: 32 }}
@@ -410,7 +443,7 @@ export default function WorkSection() {
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
           whileHover={{ boxShadow: '0 32px 80px rgba(0,0,0,0.09)', transition: { duration: 0.12 } }}
-          className="relative mb-4 overflow-hidden rounded-3xl border border-stone-200/90 bg-white/55 backdrop-blur-md p-6 md:p-7"
+          className="relative overflow-hidden rounded-3xl border border-stone-200/90 bg-white/55 backdrop-blur-md p-6 md:p-7"
         >
           {/* Subtle gradient wash top-right */}
           <div aria-hidden className="pointer-events-none absolute top-0 right-0 w-[55%] h-full"
@@ -488,17 +521,11 @@ export default function WorkSection() {
           </div>
         </motion.div>
         </Link>
+        </ProjectBubble>
 
         {/* ── Bento Grid ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <SmallCard
-            title="Amazon Listing Score System"
-            description="Built an AI-assisted scoring engine that evaluated Amazon listings and generated optimization recommendations for sellers."
-            tags={['AI', 'E-commerce']}
-            tagColor="#818cf8"
-            delay={0.05}
-            mockup={<MockScore />}
-          />
+          <ChonkersCard delay={0.05} />
           <Link href="/work/talk-to-me" className="block">
             <SmallCard
               title="Therapist Matchmaking Platform"
@@ -516,25 +543,18 @@ export default function WorkSection() {
             tagColor="#34d399"
             delay={0.18}
             mockup={<MockFintech />}
+            comingSoon
           />
-          <ChonkersCard delay={0.24} />
+          <SmallCard
+            title="Amazon Listing Score System"
+            description="Built an AI-assisted scoring engine that evaluated Amazon listings and generated optimization recommendations for sellers."
+            tags={['AI', 'E-commerce']}
+            tagColor="#818cf8"
+            delay={0.24}
+            mockup={<MockScore />}
+            comingSoon
+          />
         </div>
-
-        {/* ── Footer note ── */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="mt-14 flex items-center justify-center gap-3 text-muted/50"
-        >
-          <div className="h-px w-12 bg-border" />
-          <span className="font-sans text-[12px] tracking-[0.12em]">More coming soon</span>
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M7 0L8.3 5.4H14L9.4 8.3L11 13.6L7 10.5L3 13.6L4.6 8.3L0 5.4H5.7Z" fill="#c4b5fd" opacity="0.6"/>
-          </svg>
-          <div className="h-px w-12 bg-border" />
-        </motion.div>
 
       </div>
     </section>

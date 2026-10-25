@@ -375,7 +375,7 @@ function SectionCelestialDecor() {
 
 export default function ProductDecisionsSection() {
   return (
-    <section className="relative overflow-hidden py-8 md:py-10 px-6" style={{ background: 'linear-gradient(160deg,#fdf4ff 0%,#f5f3ff 40%,#fef6f0 100%)' }}>
+    <section id="talk-decisions" className="relative scroll-mt-16 overflow-hidden py-8 md:py-10 px-6" style={{ background: 'linear-gradient(160deg,#fdf4ff 0%,#f5f3ff 40%,#fef6f0 100%)' }}>
       <div aria-hidden className="pointer-events-none absolute top-0 right-0 w-[480px] h-[480px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.14) 0%, transparent 72%)' }} />
       <div aria-hidden className="pointer-events-none absolute bottom-0 -left-16 w-[420px] h-[420px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(251,191,36,0.10) 0%, transparent 72%)' }} />
       <SectionCelestialDecor />

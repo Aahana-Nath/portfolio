@@ -146,7 +146,7 @@ export default function DesigningExperienceSection() {
   const [rotation, setRotation] = useState(0)
 
   return (
-    <section className="relative pt-10 pb-16 md:pt-14 md:pb-20 overflow-hidden" style={{ background: 'linear-gradient(160deg, #0a0916 0%, #15112b 45%, #1d1340 100%)' }}>
+    <section id="talk-design" className="relative scroll-mt-16 pt-10 pb-16 md:pt-14 md:pb-20 overflow-hidden" style={{ background: 'linear-gradient(160deg, #0a0916 0%, #15112b 45%, #1d1340 100%)' }}>
       <div aria-hidden className="pointer-events-none absolute inset-0" style={{ backgroundImage: 'radial-gradient(1.5px 1.5px at 10% 20%, rgba(255,255,255,0.35) 0%, transparent 60%), radial-gradient(1.5px 1.5px at 85% 15%, rgba(255,255,255,0.3) 0%, transparent 60%), radial-gradient(1px 1px at 70% 70%, rgba(255,255,255,0.25) 0%, transparent 60%), radial-gradient(1.5px 1.5px at 25% 85%, rgba(255,255,255,0.2) 0%, transparent 60%), radial-gradient(1px 1px at 50% 45%, rgba(255,255,255,0.2) 0%, transparent 60%)' }} />
       <div aria-hidden className="pointer-events-none absolute top-0 right-0 w-[520px] h-[520px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.24) 0%, transparent 72%)' }} />
       <div aria-hidden className="pointer-events-none absolute bottom-0 -left-20 w-[480px] h-[480px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(236,72,153,0.14) 0%, transparent 72%)' }} />

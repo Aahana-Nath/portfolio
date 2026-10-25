@@ -8,7 +8,7 @@ const CONTACT_OPTIONS = [
   { icon: 'mail', title: 'Write to me', subtitle: 'aahana.nath@gmail.com', href: 'mailto:aahana.nath@gmail.com' },
   { icon: 'in', title: 'LinkedIn', subtitle: "Let’s connect", href: 'https://www.linkedin.com/in/aahana-nath-31189b21a', external: true },
   { icon: 'calendar', title: 'Schedule a call', subtitle: 'Find a time' },
-  { icon: 'file', title: 'Resume', subtitle: 'View my resume', href: 'https://go.fliplink.me/view/CAD2CECE-B9E4-4830-83AA-A64A54AF4A84', external: true },
+  { icon: 'file', title: 'Resume', subtitle: 'View my resume', href: 'https://go.fliplink.me/view/ED258D2C-5395-4DA0-9D09-E47F16B116D0', external: true },
 ] as const
 
 function ContactIcon({ name }: { name: (typeof CONTACT_OPTIONS)[number]['icon'] }) {
@@ -120,11 +120,11 @@ export default function ContactSection() {
                 <>
                   <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-violet-100/80 text-violet-600"><ContactIcon name={option.icon} /></span>
                   <p className="font-serif text-[17px] font-semibold leading-snug text-[#17172d] md:text-[19px]">{option.title}</p>
-                  <p className="mt-1 font-sans text-[13px] leading-snug text-[#77788f]">{option.subtitle}</p>
+                  <p className="mt-1 font-sans text-[13px] leading-snug text-[#77788f] [overflow-wrap:anywhere]">{option.subtitle}</p>
                   <span className="mt-4 inline-flex text-[#17172d]"><ArrowUpRight /></span>
                 </>
               )
-              const cardClassName = 'min-h-[176px] rounded-2xl border border-[#e3e1e9] bg-white/55 p-4 md:p-5'
+              const cardClassName = 'min-h-[176px] min-w-0 rounded-2xl border border-[#e3e1e9] bg-white/55 p-4 md:p-5'
               const animationProps = {
                 initial: { opacity: 0, y: 14 },
                 whileInView: { opacity: 1, y: 0 },

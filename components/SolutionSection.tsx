@@ -79,7 +79,7 @@ function CinematicSolution() {
   const labelOpacity = useTransform(scrollYProgress, [0, BEATS[5], BEATS[6]], [1, 1, 0])
 
   return (
-    <section ref={sectionRef} className="relative bg-[#faf9f7]" style={{ height: `${SCROLL_LENGTH_VH}vh` }}>
+    <section id="talk-solution" ref={sectionRef} className="relative scroll-mt-16 bg-[#faf9f7]" style={{ height: `${SCROLL_LENGTH_VH}vh` }}>
       <div className="sticky top-0 h-screen overflow-hidden">
         <motion.p style={{ opacity: labelOpacity }} className="absolute top-10 left-6 md:left-12 text-[14px] font-semibold tracking-[0.18em] text-violet-600 uppercase">
           05 — The Solution
@@ -164,7 +164,7 @@ function CinematicSolution() {
 // ── Static fallback for mobile and prefers-reduced-motion ──────────────────
 function StaticSolution() {
   return (
-    <section className="relative bg-[#faf9f7] py-20 md:py-28 px-6">
+    <section id="talk-solution" className="relative scroll-mt-16 bg-[#faf9f7] py-20 md:py-28 px-6">
       <div className="mx-auto max-w-5xl text-center">
         <motion.p {...fadeUp(0)} className="text-[14px] font-semibold tracking-[0.18em] text-violet-600 uppercase mb-5">05 — The Solution</motion.p>
         <motion.h2 {...fadeUp(0.05)} className="font-serif text-[3rem] md:text-[4rem] font-medium text-ink leading-[1.05] tracking-tightest mb-5">

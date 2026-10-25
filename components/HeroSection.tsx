@@ -398,7 +398,9 @@ const KEYWORDS: PillProps[] = [
 export default function HeroSection() {
   const [verbIdx, setVerbIdx]           = useState(0)
   const [portraitHovered, setPortrait]  = useState(false)
-  const portraitRef = useRef<HTMLDivElement>(null)
+  const [mascotVideoFailed, setMascotVideoFailed] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const mascotVideoRef = useRef<HTMLVideoElement>(null)
 
   const cursorX = useMotionValue(-400)
   const cursorY = useMotionValue(-400)
@@ -425,15 +427,28 @@ export default function HeroSection() {
   const particleLayerX = useTransform(smX,[-0.5,0.5],[-14, 14])
   const particleLayerY = useTransform(smY,[-0.5,0.5],[-10, 10])
 
-  const localPX = useMotionValue(0)
-  const localPY = useMotionValue(0)
-  const tiltX   = useSpring(useTransform(localPY,[-0.5,0.5],[ 6,-6]),{stiffness:120,damping:18})
-  const tiltY   = useSpring(useTransform(localPX,[-0.5,0.5],[-6, 6]),{stiffness:120,damping:18})
-
   useEffect(() => {
     const t = setInterval(() => setVerbIdx(p => (p+1) % VERBS.length), 2750)
     return () => clearInterval(t)
   }, [])
+
+  useEffect(() => {
+    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const updatePreference = () => setPrefersReducedMotion(motionPreference.matches)
+    updatePreference()
+    motionPreference.addEventListener('change', updatePreference)
+    return () => motionPreference.removeEventListener('change', updatePreference)
+  }, [])
+
+  useEffect(() => {
+    const video = mascotVideoRef.current
+    if (!video) return
+
+    const handleVideoError = () => setMascotVideoFailed(true)
+    video.addEventListener('error', handleVideoError)
+    if (video.error) handleVideoError()
+    return () => video.removeEventListener('error', handleVideoError)
+  }, [mascotVideoFailed, prefersReducedMotion])
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -445,13 +460,7 @@ export default function HeroSection() {
     return () => window.removeEventListener('mousemove', onMove)
   }, [cursorX,cursorY,mouseNX,mouseNY])
 
-  function onPortraitMove(e: React.MouseEvent<HTMLDivElement>) {
-    const r = portraitRef.current?.getBoundingClientRect()
-    if (!r) return
-    localPX.set((e.clientX-(r.left+r.width/2))/r.width)
-    localPY.set((e.clientY-(r.top+r.height/2))/r.height)
-  }
-  function onPortraitLeave() { localPX.set(0); localPY.set(0); setPortrait(false) }
+  function onPortraitLeave() { setPortrait(false) }
 
   // The decorative background below is ~200 concurrently-animating elements —
   // only render/animate it while the hero is actually near the viewport so it
@@ -602,13 +611,10 @@ export default function HeroSection() {
 
         {/* ── RIGHT ── */}
         <motion.div
-          initial={{opacity:0}} animate={{opacity:1}}
-          transition={{duration:1.1,delay:0.25,ease:'easeOut'}}
           style={{x:canvasX,y:canvasY}}
           className="relative flex items-stretch md:w-[54%]">
 
-          <div ref={portraitRef} onMouseMove={onPortraitMove}
-            onMouseEnter={() => setPortrait(true)} onMouseLeave={onPortraitLeave}
+          <div onMouseEnter={() => setPortrait(true)} onMouseLeave={onPortraitLeave}
             className="relative w-full" style={{minHeight:'calc(100vh - 68px)'}}>
 
             {/* Centered portrait + intelligence field */}
@@ -675,28 +681,38 @@ export default function HeroSection() {
 
               {/* Portrait — no box, no rounding, blends into bg */}
               <motion.div
-                animate={{scale: portraitHovered ? 1.02 : 1}}
                 className="relative z-20"
-                initial={{opacity:0,y:24}} whileInView={{opacity:1,y:0}}
-                viewport={{once:true}}
-                transition={{duration:0.9,delay:0.42,ease:'easeOut'}}
                 style={{
-                  width:'clamp(600px,72vw,820px)',
-                  height:'clamp(700px,90vh,980px)',
-                  rotateX:tiltX, rotateY:tiltY,
+                  width: 'min(70vw, 560px)',
+                  aspectRatio: '1292 / 1600',
                 }}
               >
-                <Image
-                  src="/portrait.png"
-                  alt="Aahana — Associate Product Manager"
-                  fill
-                  className="object-contain object-top"
-                  style={{
-                    WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 84%, rgba(0,0,0,0) 100%)',
-                    maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 84%, rgba(0,0,0,0) 100%)',
-                  }}
-                  priority
-                />
+                {prefersReducedMotion || mascotVideoFailed ? (
+                  <Image
+                    src="/images/portfolio-mascot.png"
+                    alt="Aahana mascot"
+                    fill
+                    sizes="(max-width: 800px) 70vw, 560px"
+                    className="object-contain object-top"
+                    priority
+                  />
+                ) : (
+                  <video
+                    ref={mascotVideoRef}
+                    src="/videos/mascot3.webm"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    aria-label="Aahana mascot waving"
+                    onError={() => setMascotVideoFailed(true)}
+                    onCanPlay={(event) => {
+                      void event.currentTarget.play().catch(() => setMascotVideoFailed(true))
+                    }}
+                    className="h-full w-full object-contain object-top"
+                  />
+                )}
               </motion.div>
             </div>
 

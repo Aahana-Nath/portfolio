@@ -78,7 +78,7 @@ function LearningCard({ badge, aside, items, delay }: { badge: string; aside: st
 
 export default function KeyLearningsSection() {
   return (
-    <section className="relative overflow-hidden py-10 md:py-14 px-6" style={{ background: 'linear-gradient(160deg, #0a0916 0%, #15112b 45%, #1d1340 100%)' }}>
+    <section id="talk-learnings" className="relative scroll-mt-16 overflow-hidden py-10 md:py-14 px-6" style={{ background: 'linear-gradient(160deg, #0a0916 0%, #15112b 45%, #1d1340 100%)' }}>
       <StarField />
       <div aria-hidden className="pointer-events-none absolute top-0 right-0 w-[480px] h-[480px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.22) 0%, transparent 72%)' }} />
       <div aria-hidden className="pointer-events-none absolute bottom-0 -left-16 w-[420px] h-[420px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.14) 0%, transparent 72%)' }} />

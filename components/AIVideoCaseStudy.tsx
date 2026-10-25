@@ -1,9 +1,20 @@
 'use client'
 
-import React, { useState } from 'react'
-import Link from 'next/link'
+import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInViewport } from './useInViewport'
+import ProjectNavigation, { type ProjectSectionLink } from './ProjectNavigation'
+
+const AI_VIDEO_SECTIONS: ProjectSectionLink[] = [
+  { id: 'ai-video-overview', label: 'Overview' },
+  { id: 'ai-video-problem', label: 'Problem' },
+  { id: 'ai-video-vision', label: 'Vision' },
+  { id: 'ai-video-audience', label: 'Audience' },
+  { id: 'ai-video-solution', label: 'Solution' },
+  { id: 'ai-video-pipeline', label: 'Pipeline' },
+  { id: 'ai-video-results', label: 'Results' },
+  { id: 'ai-video-outcome', label: 'Outcome' },
+]
 
 // ── Deterministic star data (no Math.random to avoid hydration mismatch) ──
 const STARS = Array.from({ length: 40 }, (_, i) => ({
@@ -23,6 +34,30 @@ function fadeUp(delay = 0, duration = 0.42) {
     viewport: { once: true, margin: '180px' } as const,
     transition: { duration, delay, ease: [0.25, 0.1, 0.25, 1] as const },
   }
+}
+
+function LazyLoopVideo({ src, className }: { src: string; className: string }) {
+  const { ref, inView } = useInViewport<HTMLVideoElement>('300px')
+  const [shouldLoad, setShouldLoad] = useState(false)
+
+  useEffect(() => {
+    if (inView) setShouldLoad(true)
+  }, [inView])
+
+  useEffect(() => {
+    const video = ref.current
+    if (!video || !shouldLoad) return
+    if (inView) {
+      void video.play().catch(() => {})
+    } else {
+      video.pause()
+    }
+  }, [inView, ref, shouldLoad])
+
+  return (
+    // eslint-disable-next-line jsx-a11y/media-has-caption
+    <video ref={ref} className={className} src={shouldLoad ? src : undefined} preload="none" muted loop playsInline />
+  )
 }
 
 // ── Icons ──────────────────────────────────────────────────────────────────
@@ -118,22 +153,15 @@ function GalaxyBackground() {
 function HeroSection() {
   const tags = ['Generative AI', 'E-commerce', 'Video Automation', 'Product Management']
   return (
-    <section className="relative overflow-hidden flex flex-col sticky top-0 z-0"
+    <section id="ai-video-overview" className="relative scroll-mt-16 overflow-hidden flex flex-col sticky top-0 z-0"
       style={{ minHeight: '100vh', background: 'radial-gradient(ellipse 100% 80% at 50% 30%, #0d0b1f 0%, #050308 65%)' }}>
 
       <GalaxyBackground />
 
-      <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 md:px-12 lg:px-20 pt-10 pb-16 flex-1 flex flex-col">
+      <div className="relative z-10 mx-auto w-full max-w-[1280px] px-6 md:px-12 lg:px-20 pt-24 pb-16 flex-1 flex flex-col">
 
         {/* Top bar */}
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center mb-10 md:mb-12">
-          <Link href="/" className="inline-flex justify-self-start items-center gap-2 rounded-full border border-white/15 px-3.5 py-2 text-[12px] font-medium text-white/70 transition-colors hover:border-white/30 hover:text-white">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-              <path d="M11.5 7H2.5M2.5 7l4-4M2.5 7l4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <span className="hidden sm:inline">Back to home</span>
-            <span className="sm:hidden">Home</span>
-          </Link>
+        <div className="flex items-center justify-between mb-10 md:mb-12">
           <motion.span {...fadeUp(0)} className="inline-flex text-[11px] font-semibold tracking-[0.2em] text-white/50 uppercase">
             01 — Overview
           </motion.span>
@@ -170,14 +198,15 @@ function HeroSection() {
           </motion.div>
 
           <motion.div {...fadeUp(0.32)}>
-            <motion.button
+            <motion.a
+              href="#ai-video-problem"
               whileHover={{ scale: 1.03, transition: { duration: 0.1 } }}
               whileTap={{ scale: 0.97 }}
               className="inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[14px] font-semibold tracking-wide text-white"
               style={{ background: 'linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%)', boxShadow: '0 8px 30px rgba(99,102,241,0.4)' }}
             >
               Start the journey <IconArrowUpRight />
-            </motion.button>
+            </motion.a>
           </motion.div>
 
           <motion.div {...fadeUp(0.4)} className="flex flex-col items-center gap-3 mt-7">
@@ -268,11 +297,9 @@ function ThumbFrame({ children, bg }: { children: React.ReactNode; bg?: string }
 function DarkPlayThumb() {
   return (
     <ThumbFrame bg="#000">
-      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-      <video
+      <LazyLoopVideo
         className="absolute inset-0 w-full h-full object-cover"
         src="https://dresma-assets.s3.us-east-2.amazonaws.com/brandagent/tmp0rp9_a94.mp4"
-        autoPlay muted loop playsInline
       />
     </ThumbFrame>
   )
@@ -444,7 +471,7 @@ function ProblemSection() {
   return (
     <>
       <SectionTopBar index="02" label="The Problem" />
-      <section className="relative bg-[#faf9f7] py-10 overflow-hidden z-10" style={{ borderRadius: '24px 24px 0 0', boxShadow: '0 -8px 40px rgba(0,0,0,0.08)' }}>
+      <section id="ai-video-problem" className="relative scroll-mt-16 bg-[#faf9f7] py-10 overflow-hidden z-10" style={{ borderRadius: '24px 24px 0 0', boxShadow: '0 -8px 40px rgba(0,0,0,0.08)' }}>
         <div className="mx-auto max-w-[1320px] px-6 md:px-8 lg:px-10">
           <motion.div {...fadeUp(0)}
             className="relative bg-white rounded-2xl shadow-[0_8px_60px_rgba(0,0,0,0.07)] border border-stone-100 p-6 lg:p-8 overflow-hidden">
@@ -517,7 +544,7 @@ function ProblemSection() {
 function VisionSection() {
   const { ref, inView } = useInViewport<HTMLElement>('300px')
   return (
-    <section ref={ref} className="relative py-40 bg-[#0d0c14] overflow-hidden flex items-center justify-center min-h-[70vh] z-10">
+    <section id="ai-video-vision" ref={ref} className="relative scroll-mt-16 py-40 bg-[#0d0c14] overflow-hidden flex items-center justify-center min-h-[70vh] z-10">
       {inView && STARS.map((s, i) => (
         <motion.div key={i} className="absolute rounded-full bg-white" style={{ width: s.w, height: s.w, left: `${s.left}%`, top: `${s.top}%`, opacity: s.opacity }}
           animate={{ opacity: [s.opacity, s.opacity * 3.5, s.opacity] }} transition={{ duration: s.dur, repeat: Infinity, delay: s.delay }} />
@@ -590,8 +617,7 @@ function TierVisual({ tint, video, icon }: { tint: 'green' | 'orange' | 'violet'
   if (video) {
     return (
       <div className="w-full h-full min-h-[130px] rounded-xl overflow-hidden bg-black">
-        {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-        <video className="w-full h-full object-cover" src={video} autoPlay muted loop playsInline />
+        <LazyLoopVideo className="w-full h-full object-cover" src={video} />
       </div>
     )
   }
@@ -733,7 +759,7 @@ function TargetUsersSection() {
   return (
     <>
       <SectionTopBar index="04" label="Target Users" />
-      <section className="relative bg-[#faf9f7] py-16 overflow-hidden z-10">
+      <section id="ai-video-audience" className="relative scroll-mt-16 bg-[#faf9f7] py-16 overflow-hidden z-10">
         <div className="mx-auto max-w-[1360px] px-6 md:px-10 lg:px-14">
           <motion.div {...fadeUp(0)} className="relative bg-white rounded-2xl shadow-[0_8px_60px_rgba(0,0,0,0.07)] border border-stone-100 p-6 lg:p-10 overflow-hidden">
 
@@ -775,9 +801,10 @@ function SolutionPlanet({ size, style }: { size: number; style?: React.CSSProper
 function SolutionVideoCard({ aspectRatio = '16/10' }: { aspectRatio?: string } = {}) {
   return (
     <div className="relative w-full rounded-xl overflow-hidden border border-stone-200/70" style={{ aspectRatio }}>
-      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-      <video className="absolute inset-0 w-full h-full object-cover"
-        src="https://dresma-assets.s3.us-east-2.amazonaws.com/brandagent/tmp0rp9_a94.mp4" autoPlay muted loop playsInline />
+      <LazyLoopVideo
+        className="absolute inset-0 w-full h-full object-cover"
+        src="https://dresma-assets.s3.us-east-2.amazonaws.com/brandagent/tmp0rp9_a94.mp4"
+      />
       <div className="absolute inset-0 flex items-center justify-center">
         <span className="w-8 h-8 rounded-full bg-black/50 flex items-center justify-center backdrop-blur-sm">
           <svg width="10" height="10" viewBox="0 0 8 8" fill="none"><path d="M2 1.2L7 4L2 6.8V1.2Z" fill="white" /></svg>
@@ -826,9 +853,10 @@ function SolutionAIHub() {
 function SolutionCustomVideoCard({ aspectRatio = '16/10' }: { aspectRatio?: string } = {}) {
   return (
     <div className="relative w-full rounded-xl overflow-hidden border border-stone-200/70" style={{ aspectRatio }}>
-      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-      <video className="absolute inset-0 w-full h-full object-cover"
-        src="https://dresma-assets.s3.us-east-2.amazonaws.com/brandagent/Wh5whwzJ6La5ilj0JSIfz_3c76a172bd69494883f24149ce1034a6.mp4" autoPlay muted loop playsInline />
+      <LazyLoopVideo
+        className="absolute inset-0 w-full h-full object-cover"
+        src="https://dresma-assets.s3.us-east-2.amazonaws.com/brandagent/Wh5whwzJ6La5ilj0JSIfz_3c76a172bd69494883f24149ce1034a6.mp4"
+      />
       <div className="absolute inset-0 flex flex-col justify-between p-2">
         <span className="self-end font-serif text-[11.5px] italic text-white text-right leading-tight" style={{ textShadow: '0 1px 6px rgba(0,0,0,0.5)' }}>
           Beauty<br />in every detail.
@@ -872,7 +900,7 @@ function SolutionSection() {
   return (
     <>
       <SectionTopBar index="05" label="The Solution" />
-      <section className="relative bg-[#05060f] py-16 overflow-hidden z-10">
+      <section id="ai-video-solution" className="relative scroll-mt-16 bg-[#05060f] py-16 overflow-hidden z-10">
       {/* Decorative galaxy corners */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(76,29,149,0.25) 0%, transparent 55%)' }} />
@@ -1088,9 +1116,8 @@ function PipelineSideCard({ tint, title, desc, children }: { tint: Tint; title: 
 
 function PipelineVideoThumb({ src, duration }: { src: string; duration: string }) {
   return (
-    <div className="relative w-full rounded-xl overflow-hidden border border-stone-200/70" style={{ aspectRatio: '16/11' }}>
-      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-      <video className="absolute inset-0 w-full h-full object-cover" src={src} autoPlay muted loop playsInline />
+    <div className="relative h-[184px] w-full rounded-xl overflow-hidden border border-stone-200/70">
+      <LazyLoopVideo className="absolute inset-0 w-full h-full object-cover" src={src} />
       <div className="absolute inset-0 flex items-center justify-center">
         <span className="w-9 h-9 rounded-full bg-black/50 flex items-center justify-center backdrop-blur-sm">
           <svg width="11" height="11" viewBox="0 0 8 8" fill="none"><path d="M2 1.2L7 4L2 6.8V1.2Z" fill="white" /></svg>
@@ -1172,7 +1199,7 @@ function BehindScenesSection() {
   return (
     <>
       <SectionTopBar index="06" label="Behind the Scenes" />
-      <section className="relative bg-[#f7f6ff] py-16 overflow-hidden z-10">
+      <section id="ai-video-pipeline" className="relative scroll-mt-16 bg-[#f7f6ff] py-16 overflow-hidden z-10">
       {/* Decorative galaxy corners */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <svg className="absolute inset-0 w-full h-full opacity-40" viewBox="0 0 1400 700" fill="none" preserveAspectRatio="none">
@@ -1182,7 +1209,7 @@ function BehindScenesSection() {
         <SolutionPlanet size={220} style={{ left: -60, bottom: -140 }} />
       </div>
 
-      <div className="relative mx-auto px-6 md:px-10 lg:px-14">
+      <div className="relative mx-auto w-full max-w-[1560px] px-3 md:px-5 lg:px-7">
 
         <motion.div {...fadeUp(0.04)} className="relative bg-white rounded-2xl shadow-[0_8px_60px_rgba(0,0,0,0.07)] border border-stone-100 p-6 lg:p-8 overflow-hidden">
 
@@ -1198,7 +1225,7 @@ function BehindScenesSection() {
         </div>
 
         {/* Pipeline grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-[260px_28px_1fr_28px_300px] gap-4 items-stretch mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(280px,0.9fr)_24px_minmax(0,1.6fr)_24px_minmax(320px,1fr)] gap-3 items-stretch mb-6">
 
           {/* Left column: inputs */}
           <div className="flex flex-col gap-3">
@@ -1366,7 +1393,7 @@ function ResultsSection() {
   return (
     <>
       <SectionTopBar index="07" label="Results" />
-      <section className="relative bg-[#f7f6ff] py-10 overflow-hidden z-10">
+      <section id="ai-video-results" className="relative scroll-mt-16 bg-[#f7f6ff] py-10 overflow-hidden z-10">
         <div className="relative mx-auto px-6 md:px-10 lg:px-14">
 
           <motion.div {...fadeUp(0.04)} className="relative bg-white rounded-2xl shadow-[0_8px_60px_rgba(0,0,0,0.07)] border border-stone-100 p-5 lg:p-6 overflow-hidden">
@@ -1419,7 +1446,7 @@ function ResultsSection() {
 function OutcomeSection() {
   const { ref, inView } = useInViewport<HTMLElement>('300px')
   return (
-    <section ref={ref} className="relative min-h-[70vh] bg-[#0d0c14] flex items-center overflow-hidden py-32 z-10">
+    <section id="ai-video-outcome" ref={ref} className="relative scroll-mt-16 min-h-[70vh] bg-[#0d0c14] flex items-center overflow-hidden py-32 z-10">
       {inView && STARS.map((s, i) => (
         <motion.div key={i} className="absolute rounded-full bg-white" style={{ width: s.w, height: s.w, left: `${s.left}%`, top: `${s.top}%`, opacity: s.opacity }}
           animate={{ opacity: [s.opacity, s.opacity * 3.5, s.opacity] }} transition={{ duration: s.dur, repeat: Infinity, delay: s.delay }} />
@@ -1440,11 +1467,6 @@ function OutcomeSection() {
             </div>
           ))}
         </motion.div>
-        <motion.div {...fadeUp(0.5)} className="mt-16">
-          <Link href="/" className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/20 text-white/60 hover:text-white hover:border-white/40 transition-colors text-[13px] font-medium tracking-wide">
-            ← Back to Work
-          </Link>
-        </motion.div>
       </div>
     </section>
   )
@@ -1453,9 +1475,8 @@ function OutcomeSection() {
 // ── "See the results" modal ─────────────────────────────────────────────────
 function ModalVideoCard({ src, caption }: { src: string; caption?: string }) {
   return (
-    <div className="relative w-full rounded-xl overflow-hidden border border-stone-200/70 bg-black" style={{ aspectRatio: '16/10' }}>
-      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-      <video className="absolute inset-0 w-full h-full object-contain" src={src} autoPlay muted loop playsInline />
+    <div className="relative h-[260px] w-full rounded-xl overflow-hidden border border-stone-200/70 bg-black">
+      <LazyLoopVideo className="absolute inset-0 w-full h-full object-contain" src={src} />
       {caption && (
         <div className="absolute inset-0 flex items-center justify-end p-4">
           <span className="font-serif text-[16px] italic text-white text-right leading-tight" style={{ textShadow: '0 1px 6px rgba(0,0,0,0.5)' }}>
@@ -1541,7 +1562,7 @@ function ResultsModal({ open, onClose }: { open: boolean; onClose: () => void })
             exit={{ opacity: 0, scale: 0.96, y: 16 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
             data-lenis-prevent
-            className="relative w-full max-w-[1000px] max-h-[92vh] overflow-y-auto rounded-[28px] bg-[#f7f6ff] p-6 md:p-12 shadow-2xl"
+            className="relative w-full max-w-[1200px] max-h-[92vh] overflow-y-auto rounded-[28px] bg-[#f7f6ff] p-4 md:p-8 shadow-2xl"
           >
             <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden rounded-[28px]">
               <SolutionPlanet size={160} style={{ left: -70, bottom: -110 }} />
@@ -1620,6 +1641,7 @@ export default function AIVideoCaseStudy() {
   const [resultsOpen, setResultsOpen] = useState(false)
   return (
     <div className="antialiased">
+      <ProjectNavigation sections={AI_VIDEO_SECTIONS} theme="dark" />
       <HeroSection />
       <ProblemSection />
       <VisionSection />

@@ -4,6 +4,20 @@ import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInViewport } from './useInViewport'
+import ProjectNavigation, { type ProjectSectionLink } from './ProjectNavigation'
+
+const CHONKERS_SECTIONS: ProjectSectionLink[] = [
+  { id: 'chonkers-overview', label: 'Overview' },
+  { id: 'chonkers-problem', label: 'Problem' },
+  { id: 'chonkers-vision', label: 'Vision' },
+  { id: 'chonkers-research', label: 'Research' },
+  { id: 'chonkers-onboarding', label: 'Onboarding' },
+  { id: 'chonkers-dashboard', label: 'Dashboard' },
+  { id: 'chonkers-habits', label: 'Behavior' },
+  { id: 'chonkers-mvp', label: 'MVP' },
+  { id: 'chonkers-reflections', label: 'Reflections' },
+  { id: 'chonkers-outcome', label: 'Outcome' },
+]
 
 // ── Deterministic star data (no Math.random to avoid hydration mismatch) ──
 const STARS = Array.from({ length: 40 }, (_, i) => ({
@@ -232,13 +246,13 @@ function AtmosphericDog() {
 // ── SECTION 1: Hero ──────────────────────────────────────────────────────────
 function HeroSection({ onOpenStory }: { onOpenStory: () => void }) {
   return (
-    <section className="relative overflow-hidden flex items-stretch sticky top-0 z-0"
+    <section id="chonkers-overview" className="relative scroll-mt-16 overflow-hidden flex items-stretch sticky top-0 z-0"
       style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #faf9f7 0%, rgba(245,243,255,0.3) 50%, #faf9f7 100%)' }}>
 
       <button
         type="button"
         onClick={onOpenStory}
-        className="absolute right-5 top-5 z-40 inline-flex items-center gap-2 rounded-full border border-violet-100 bg-white/90 px-4 py-2.5 text-[12px] font-semibold text-violet-700 shadow-[0_6px_22px_rgba(76,29,149,0.12)] backdrop-blur-sm transition-colors hover:bg-violet-50 md:right-8 md:top-7"
+        className="absolute right-5 top-20 z-40 inline-flex items-center gap-2 rounded-full border border-violet-100 bg-white/90 px-4 py-2.5 text-[12px] font-semibold text-violet-700 shadow-[0_6px_22px_rgba(76,29,149,0.12)] backdrop-blur-sm transition-colors hover:bg-violet-50 md:right-8"
       >
         <PawDoodle className="w-4" opacity={1} />
         The story behind Chonkers
@@ -277,15 +291,6 @@ function HeroSection({ onOpenStory }: { onOpenStory: () => void }) {
       {/* ════ COL 1 — Text, fixed 400 px ════ */}
       <div className="relative z-10 flex flex-col justify-center shrink-0 py-20"
         style={{ width: 400, paddingLeft: 64, paddingRight: 24 }}>
-
-        <motion.div {...fadeUp(0)}>
-          <Link href="/" className="inline-flex items-center gap-1.5 text-[11.5px] font-medium text-muted hover:text-ink transition-colors tracking-wide mb-8 group">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="group-hover:-translate-x-0.5 transition-transform duration-200">
-              <path d="M9 2L4 7L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            Back to Work
-          </Link>
-        </motion.div>
 
         <motion.h1 {...fadeUp(0.08)} className="font-serif text-[5.5rem] md:text-[7rem] font-medium leading-[0.88] tracking-tightest text-ink mb-5">
           Chonkers
@@ -432,17 +437,9 @@ function ChonkersStoryModal({ onClose }: { onClose: () => void }) {
         </button>
 
         <div className="mx-5 mb-5 mt-16 grid min-h-0 flex-1 grid-cols-1 grid-rows-[auto_minmax(0,1fr)] overflow-hidden rounded-xl border border-stone-200 bg-white/30 md:m-7 md:mt-7 md:grid-cols-[0.9fr_1.1fr] md:grid-rows-1">
-          <div className="grid min-h-0 grid-cols-2 grid-rows-[minmax(160px,1.15fr)_minmax(100px,0.85fr)] gap-3 p-4 md:p-6">
-            <div className="relative col-span-2 min-h-0 overflow-hidden rounded-xl border border-stone-200/70 bg-white">
+          <div className="grid min-h-0 grid-rows-[minmax(180px,1fr)] p-4 md:p-6">
+            <div className="relative min-h-0 overflow-hidden rounded-xl border border-stone-200/70 bg-white">
               <video src="https://res.cloudinary.com/dvtf1ckaf/video/upload/v1792746354/WhatsApp_Video_2026-10-23_at_14.12.55_zbmywa.mp4" aria-label="Chonkers video" autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover" />
-            </div>
-            <div className="relative min-h-0 overflow-hidden rounded-xl border border-stone-200/70 bg-white">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="https://res.cloudinary.com/dvtf1ckaf/image/upload/v1792746353/WhatsApp_Image_2026-10-23_at_14.10.58_vheqwk.jpg" alt="Aahana with Chonkers" className="absolute inset-0 h-full w-full object-cover" />
-            </div>
-            <div className="relative min-h-0 overflow-hidden rounded-xl border border-stone-200/70 bg-white">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="https://res.cloudinary.com/dvtf1ckaf/image/upload/v1792746353/WhatsApp_Image_2026-10-23_at_14.11.51_ubjqfn.jpg" alt="Chonkers" className="absolute inset-0 h-full w-full object-cover" />
             </div>
           </div>
 
@@ -488,7 +485,7 @@ function ProblemSection() {
   ]
 
   return (
-    <section className="relative bg-[#faf9f7] pb-28 overflow-hidden z-10" style={{ borderRadius: '24px 24px 0 0', boxShadow: '0 -8px 40px rgba(0,0,0,0.08)' }}>
+    <section id="chonkers-problem" className="relative scroll-mt-16 bg-[#faf9f7] pb-28 overflow-hidden z-10" style={{ borderRadius: '24px 24px 0 0', boxShadow: '0 -8px 40px rgba(0,0,0,0.08)' }}>
       <div className="mx-auto max-w-[1440px] px-6 md:px-10 lg:px-16">
 
         {/* White card wrapper — bigger padding, max-width expanded */}
@@ -665,7 +662,7 @@ function ProblemSection() {
 function VisionSection() {
   const { ref, inView } = useInViewport<HTMLElement>('300px')
   return (
-    <section ref={ref} className="relative py-40 bg-[#0d0c14] overflow-hidden flex items-center justify-center min-h-[70vh] z-10">
+    <section id="chonkers-vision" ref={ref} className="relative scroll-mt-16 py-40 bg-[#0d0c14] overflow-hidden flex items-center justify-center min-h-[70vh] z-10">
       {inView && STARS.map((s, i) => (
         <motion.div key={i} className="absolute rounded-full bg-white" style={{ width: s.w, height: s.w, left: `${s.left}%`, top: `${s.top}%`, opacity: s.opacity }}
           animate={{ opacity: [s.opacity, s.opacity * 4, s.opacity] }} transition={{ duration: s.dur, repeat: Infinity, delay: s.delay }} />
@@ -698,7 +695,7 @@ const RESEARCH = [
 function ResearchSection() {
   const [active, setActive] = useState<number | null>(null)
   return (
-    <section className="relative bg-[#f7f6ff] py-24 z-10">
+    <section id="chonkers-research" className="relative scroll-mt-16 bg-[#f7f6ff] py-24 z-10">
       <div className="mx-auto max-w-[1440px] px-6 md:px-10 lg:px-16">
 
         {/* Header row */}
@@ -882,7 +879,7 @@ function OnboardingSection() {
   }
 
   return (
-    <section className="relative bg-white py-12 z-10 overflow-hidden">
+    <section id="chonkers-onboarding" className="relative scroll-mt-16 bg-white py-12 z-10 overflow-hidden">
       <style>{`
         #onboarding-screen-row { -ms-overflow-style: none; scrollbar-width: none; }
         #onboarding-screen-row::-webkit-scrollbar { display: none; }
@@ -1206,7 +1203,7 @@ function DashboardSection() {
   ]
 
   return (
-    <section className="relative bg-[#faf9f7] py-20 z-10 overflow-hidden">
+    <section id="chonkers-dashboard" className="relative scroll-mt-16 bg-[#faf9f7] py-20 z-10 overflow-hidden">
       {/* Decorative paw prints */}
       <div aria-hidden className="pointer-events-none select-none absolute top-10 left-[260px] text-violet-200 text-2xl opacity-60 rotate-12">🐾</div>
       <div aria-hidden className="pointer-events-none select-none absolute bottom-20 left-[320px] text-violet-200 text-xl opacity-40 -rotate-6">🐾</div>
@@ -1366,7 +1363,7 @@ const CONTEXT_NODES = [
 function AIAssistantSection() {
   const [activeNode, setActiveNode] = useState<string | null>(null)
   return (
-    <section className="relative bg-[#faf9f7] py-32 z-10">
+    <section id="chonkers-assistant" className="relative scroll-mt-16 bg-[#faf9f7] py-32 z-10">
       <div className="mx-auto max-w-[1300px] px-6 md:px-12 lg:px-20">
         <motion.p {...fadeUp(0)} className="mb-4 flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-muted/60 uppercase">
           <span className="w-1.5 h-1.5 rounded-full bg-violet-400 inline-block" />07 — AI Pet Assistant
@@ -1444,7 +1441,7 @@ const BEHAVIOR_NODES = [
 
 function BehavioralSection() {
   return (
-    <section className="relative z-10 overflow-hidden border-y border-white/10 py-14 lg:flex lg:min-h-screen lg:items-center" style={{ background: 'radial-gradient(ellipse at 50% 0%, #171329 0%, #0b0912 62%, #07060b 100%)' }}>
+    <section id="chonkers-habits" className="relative scroll-mt-16 z-10 overflow-hidden border-y border-white/10 py-14 lg:flex lg:min-h-screen lg:items-center" style={{ background: 'radial-gradient(ellipse at 50% 0%, #171329 0%, #0b0912 62%, #07060b 100%)' }}>
       <div aria-hidden className="pointer-events-none absolute inset-0" style={{ backgroundImage: 'radial-gradient(1px 1px at 8% 18%, rgba(226,218,255,0.8) 0, transparent 1.5px), radial-gradient(1px 1px at 19% 73%, rgba(196,181,253,0.65) 0, transparent 1.5px), radial-gradient(1px 1px at 31% 34%, rgba(255,255,255,0.55) 0, transparent 1.5px), radial-gradient(1px 1px at 47% 12%, rgba(196,181,253,0.7) 0, transparent 1.5px), radial-gradient(1px 1px at 62% 81%, rgba(255,255,255,0.5) 0, transparent 1.5px), radial-gradient(1px 1px at 76% 26%, rgba(196,181,253,0.7) 0, transparent 1.5px), radial-gradient(1px 1px at 91% 64%, rgba(255,255,255,0.55) 0, transparent 1.5px)' }} />
       <div className="relative z-10 mx-auto w-full max-w-[1440px] px-4 md:px-6 lg:px-8">
         <div className="rounded-3xl border border-stone-200/80 bg-[#faf9f7] px-5 py-6 md:px-8 md:py-8 lg:px-10 lg:py-10">
@@ -1528,7 +1525,7 @@ function EcosystemSection() {
   const [hover, setHover] = useState<string | null>(null)
   const connected = (id: string) => hover ? ECO_EDGES.some(([a, b]) => (a === hover && b === id) || (b === hover && a === id)) : false
   return (
-    <section className="relative bg-[#f7f6ff] py-32 z-10">
+    <section id="chonkers-ecosystem" className="relative scroll-mt-16 bg-[#f7f6ff] py-32 z-10">
       <div className="mx-auto max-w-[1300px] px-6 md:px-12 lg:px-20">
         <motion.p {...fadeUp(0)} className="mb-4 flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-muted/60 uppercase">
           <span className="w-1.5 h-1.5 rounded-full bg-violet-400 inline-block" />09 — Product Ecosystem
@@ -1622,7 +1619,7 @@ const MVP_EXCLUDED = [
 
 function MVPSection() {
   return (
-    <section className="relative bg-[#faf9f7] pt-8 pb-16 z-10">
+    <section id="chonkers-mvp" className="relative scroll-mt-16 bg-[#faf9f7] pt-8 pb-16 z-10">
       <div className="mx-auto max-w-[1440px] px-6 md:px-10 lg:px-12">
         <motion.p {...fadeUp(0)} className="mb-4 flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-muted/60 uppercase">
           <span className="w-1.5 h-1.5 rounded-full bg-violet-400 inline-block" />10 — MVP Scope
@@ -1759,7 +1756,7 @@ const REFLECTIONS = [
 
 function ReflectionsSection() {
   return (
-    <section className="relative bg-[#faf9f7] py-20 z-10">
+    <section id="chonkers-reflections" className="relative scroll-mt-16 bg-[#faf9f7] py-20 z-10">
       <div className="mx-auto max-w-[1360px] px-6 md:px-10 lg:px-14">
         <motion.p {...fadeUp(0)} className="mb-5 flex items-center gap-2 text-xs font-semibold tracking-[0.18em] text-muted/60 uppercase">
           <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />12 — Reflections
@@ -1809,7 +1806,7 @@ function ReflectionsSection() {
 function OutcomeSection() {
   const { ref, inView } = useInViewport<HTMLElement>('300px')
   return (
-    <section ref={ref} className="relative min-h-[70vh] bg-[#0d0c14] flex items-center overflow-hidden py-32 z-10">
+    <section id="chonkers-outcome" ref={ref} className="relative scroll-mt-16 min-h-[70vh] bg-[#0d0c14] flex items-center overflow-hidden py-32 z-10">
       {inView && STARS.map((s, i) => (
         <motion.div key={i} className="absolute rounded-full bg-white" style={{ width: s.w, height: s.w, left: `${s.left}%`, top: `${s.top}%`, opacity: s.opacity }}
           animate={{ opacity: [s.opacity, s.opacity * 3.5, s.opacity] }} transition={{ duration: s.dur, repeat: Infinity, delay: s.delay }} />
@@ -1847,6 +1844,7 @@ export default function ChonkersCaseStudy() {
 
   return (
     <div className="antialiased">
+      <ProjectNavigation sections={CHONKERS_SECTIONS} />
       <HeroSection onOpenStory={() => setIsStoryOpen(true)} />
       <ProblemSection />
       <VisionSection />

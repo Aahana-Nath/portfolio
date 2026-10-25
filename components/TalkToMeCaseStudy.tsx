@@ -1,12 +1,24 @@
 'use client'
 
-import { useState } from 'react'
-import Link from 'next/link'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
+import { ArrowUpRight, BookOpen, Heart, X } from 'lucide-react'
 import SolutionSection from './SolutionSection'
 import DesigningExperienceSection from './DesigningExperienceSection'
 import ProductDecisionsSection from './ProductDecisionsSection'
 import KeyLearningsSection from './KeyLearningsSection'
+import ProjectNavigation, { type ProjectSectionLink } from './ProjectNavigation'
+
+const TALK_TO_ME_SECTIONS: ProjectSectionLink[] = [
+  { id: 'talk-overview', label: 'Overview' },
+  { id: 'talk-context', label: 'Context' },
+  { id: 'talk-users', label: 'Users' },
+  { id: 'talk-jobs', label: 'Jobs' },
+  { id: 'talk-solution', label: 'Solution' },
+  { id: 'talk-design', label: 'Design' },
+  { id: 'talk-decisions', label: 'Decisions' },
+  { id: 'talk-learnings', label: 'Learnings' },
+]
 
 // ── Animation helper ──────────────────────────────────────────────────────
 function fadeUp(delay = 0, duration = 0.42) {
@@ -19,13 +31,6 @@ function fadeUp(delay = 0, duration = 0.42) {
 }
 
 // ── Tiny icons ─────────────────────────────────────────────────────────────
-function IconArrowUpRight() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 13 13" fill="none" className="inline-block">
-      <path d="M2.5 10.5L10.5 2.5M10.5 2.5H4.5M10.5 2.5V8.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
 function IconChatBubble() {
   return (
     <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
@@ -34,36 +39,6 @@ function IconChatBubble() {
       <circle cx="10" cy="8.2" r="1" fill="white" />
       <circle cx="13" cy="8.2" r="1" fill="white" />
     </svg>
-  )
-}
-
-// ── Top nav bar ─────────────────────────────────────────────────────────
-function NavBar() {
-  const links = ['Overview', 'Research', 'Users', 'Solution', 'Design', 'Impact']
-  return (
-    <div className="relative z-20 flex items-center justify-between border-b border-stone-200/70 bg-white/80 backdrop-blur-sm px-6 md:px-10 py-4">
-      <div className="flex items-center gap-2">
-        <IconChatBubble />
-        <span className="font-serif text-[15px] font-semibold text-ink">Talk To ME</span>
-      </div>
-
-      <nav className="hidden md:flex items-center gap-7">
-        {links.map((l, i) => (
-          <span
-            key={l}
-            className={`text-[13px] font-medium tracking-wide transition-colors ${
-              i === links.length - 2 ? 'text-violet-600' : 'text-muted hover:text-ink'
-            }`}
-          >
-            {l}
-          </span>
-        ))}
-      </nav>
-
-      <button className="inline-flex items-center gap-1.5 rounded-full bg-ink text-white px-4 py-2 text-[12px] font-medium tracking-wide hover:bg-ink/85 transition-colors duration-150">
-        View Full Prototype <IconArrowUpRight />
-      </button>
-    </div>
   )
 }
 
@@ -252,25 +227,25 @@ function GalaxyBackground() {
 }
 
 // ── SECTION: Hero ──────────────────────────────────────────────────────────
-function HeroSection() {
+function HeroSection({ onOpenStory }: { onOpenStory: () => void }) {
   return (
-    <section className="relative overflow-hidden" style={{ background: 'linear-gradient(160deg,#f5f3ff 0%,#ede9fe 55%,#f7f6f3 100%)' }}>
-      <NavBar />
-
+    <section id="talk-overview" className="relative scroll-mt-16 overflow-hidden" style={{ background: 'linear-gradient(160deg,#f5f3ff 0%,#ede9fe 55%,#f7f6f3 100%)' }}>
       <GalaxyBackground />
 
-      <div className="relative z-10 mx-auto max-w-[1280px] px-6 md:px-12 lg:px-20 pt-12 pb-20 flex flex-col md:flex-row md:items-center gap-12">
+      <button
+        type="button"
+        onClick={onOpenStory}
+        aria-haspopup="dialog"
+        className="absolute right-5 top-4 z-40 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-[#17152f] px-4 py-2.5 text-[12px] font-semibold text-white shadow-sm transition-colors hover:bg-violet-900 md:right-8"
+      >
+        <BookOpen aria-hidden="true" className="h-4 w-4 text-violet-300" />
+        Story behind Talk To ME
+        <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5" />
+      </button>
+
+      <div className="relative z-10 mx-auto max-w-[1280px] px-6 md:px-12 lg:px-20 pt-20 pb-20 flex flex-col md:flex-row md:items-center gap-12">
         {/* Left — content */}
         <div className="relative z-10 md:w-[46%] shrink-0">
-          <motion.div {...fadeUp(0)}>
-            <Link href="/" className="inline-flex items-center gap-1.5 text-[11.5px] font-medium text-muted hover:text-ink transition-colors tracking-wide mb-6 group">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="group-hover:-translate-x-0.5 transition-transform duration-200">
-                <path d="M9 2L4 7L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              Back to Work
-            </Link>
-          </motion.div>
-
           <motion.p {...fadeUp(0.05)} className="text-[13px] font-semibold tracking-[0.18em] text-muted/70 uppercase mb-4">
             03 — Product Design
           </motion.p>
@@ -342,6 +317,84 @@ function HeroSection() {
   )
 }
 
+function TalkToMeStoryModal({ onClose }: { onClose: () => void }) {
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    const previousBodyOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    closeButtonRef.current?.focus()
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') onClose()
+      if (event.key === 'Tab') {
+        event.preventDefault()
+        closeButtonRef.current?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = previousBodyOverflow
+      previousFocus?.focus({ preventScroll: true })
+    }
+  }, [onClose])
+
+  return (
+    <div
+      data-lenis-prevent
+      onClick={(event) => { if (event.target === event.currentTarget) onClose() }}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[#17152f]/50 p-4 backdrop-blur-sm md:p-8"
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="talk-story-title"
+        className="relative flex max-h-[90dvh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-violet-200 bg-[#fcfbff] shadow-[0_24px_90px_rgba(23,21,47,0.28)]"
+      >
+        <button
+          ref={closeButtonRef}
+          type="button"
+          onClick={onClose}
+          aria-label="Close story"
+          className="absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-violet-100 bg-white text-[#514d5d] shadow-sm transition-colors hover:bg-violet-50 hover:text-violet-700"
+        >
+          <X aria-hidden="true" className="h-4 w-4" />
+        </button>
+
+        <div data-lenis-prevent className="grid min-h-0 grid-cols-1 overflow-y-auto overscroll-contain md:grid-cols-[0.9fr_1.1fr]">
+          <div className="bg-violet-50/60 p-5 pt-16 md:p-7">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://res.cloudinary.com/dvtf1ckaf/image/upload/v1792945109/WhatsApp_Image_2026-10-25_at_21.47.30_y3yoev.jpg"
+              alt="IIT Roorkee project certificates in front of the James Thomason Building"
+              className="max-h-[32dvh] w-full rounded-lg object-contain md:h-full md:max-h-none"
+            />
+          </div>
+
+          <div className="px-6 pb-7 pt-6 md:px-8 md:pb-8 md:pt-16">
+            <p className="mb-2 text-[12px] font-medium text-[#77788f]">The story behind</p>
+            <h2 id="talk-story-title" className="mb-5 font-serif text-[2rem] font-semibold leading-tight text-[#17152f]">
+              <span className="text-violet-600">Talk</span> To <span className="text-violet-600">ME</span>
+            </h2>
+            <div className="space-y-4 text-[13px] leading-relaxed text-[#514d5d] md:text-[14px]">
+              <p>During my time at IIT Roorkee, we participated in a hands-on project as part of the BYOP (Build Your Own Project) program. A group of 5 of us came together to build Talk To ME, a platform to make mental health support more accessible.</p>
+              <p>We each took ownership of different aspects, from user research and problem validation to product design, development, testing and deployment. It was my first experience building a product from 0 to 1, and we gave it our all, learning, iterating and supporting each other throughout.</p>
+              <p>This project taught me how real products are made, with empathy, collaboration, resilience and a strong sense of purpose.</p>
+            </div>
+            <p className="mt-6 flex items-center gap-2 font-serif text-[14px] italic text-violet-600">
+              <Heart aria-hidden="true" className="h-4 w-4 shrink-0 fill-violet-300 text-violet-300" />
+              A project that will always be special.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ── Stat card icons ─────────────────────────────────────────────────────
 function IconUsers() {
   return (
@@ -395,7 +448,7 @@ function StatCard({ icon, iconTint, value, label, delay = 0 }: { icon: React.Rea
 // ── SECTION: The Context ───────────────────────────────────────────────────
 function ContextSection() {
   return (
-    <section className="relative bg-[#faf9f7] pt-20 pb-10 md:pt-28 md:pb-14 overflow-hidden" style={{ borderRadius: '24px 24px 0 0', boxShadow: '0 -8px 40px rgba(0,0,0,0.06)' }}>
+    <section id="talk-context" className="relative scroll-mt-16 bg-[#faf9f7] pt-20 pb-10 md:pt-28 md:pb-14 overflow-hidden" style={{ borderRadius: '24px 24px 0 0', boxShadow: '0 -8px 40px rgba(0,0,0,0.06)' }}>
       <div className="relative z-10 mx-auto max-w-[1520px] px-6 md:px-12 lg:px-20 grid grid-cols-1 lg:grid-cols-[0.55fr_1.45fr] gap-10 lg:gap-16 items-center">
         {/* Left — label, heading, description */}
         <div>
@@ -710,7 +763,7 @@ function UsersSection() {
   }
 
   return (
-    <section className="relative py-5 md:py-6 overflow-hidden" style={{ background: '#141119' }}>
+    <section id="talk-users" className="relative scroll-mt-16 py-5 md:py-6 overflow-hidden" style={{ background: '#141119' }}>
       <div className="relative z-10 mx-auto max-w-[1320px] px-6 md:px-9 lg:px-11">
         <div className="rounded-3xl bg-[#faf9f7] p-5 md:p-6">
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 mb-5">
@@ -870,7 +923,7 @@ function JobsSection() {
   }
 
   return (
-    <section className="relative bg-[#faf9f7] py-10 md:py-12 overflow-hidden">
+    <section id="talk-jobs" className="relative scroll-mt-16 bg-[#faf9f7] py-10 md:py-12 overflow-hidden">
       <div className="relative z-10 mx-auto max-w-[1440px] px-4 md:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
@@ -947,9 +1000,12 @@ function JobsSection() {
 }
 
 export default function TalkToMeCaseStudy() {
+  const [isStoryOpen, setIsStoryOpen] = useState(false)
+
   return (
     <div className="antialiased">
-      <HeroSection />
+      <ProjectNavigation sections={TALK_TO_ME_SECTIONS} />
+      <HeroSection onOpenStory={() => setIsStoryOpen(true)} />
       <ContextSection />
       <UsersSection />
       <JobsSection />
@@ -957,6 +1013,7 @@ export default function TalkToMeCaseStudy() {
       <DesigningExperienceSection />
       <ProductDecisionsSection />
       <KeyLearningsSection />
+      {isStoryOpen && <TalkToMeStoryModal onClose={() => setIsStoryOpen(false)} />}
     </div>
   )
 }

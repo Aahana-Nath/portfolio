@@ -241,7 +241,7 @@ export default function ExperienceSection() {
                               </div>
                             ))}
                             <div className="ml-5 shrink-0">
-                              <Link href="/work/chonkers">
+                              <Link href="/work/ai-video">
                                 <motion.span whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} className="inline-flex items-center gap-1.5 rounded-full bg-violet-600 hover:bg-violet-700 text-white text-[11.5px] font-medium px-4 py-2 transition-colors cursor-pointer whitespace-nowrap">
                                   View my work
                                   <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5H9.5M9.5 5.5L6.5 2.5M9.5 5.5L6.5 8.5" stroke="white" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
