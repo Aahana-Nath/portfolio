@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { Playfair_Display, DM_Sans, Caveat } from 'next/font/google'
+import Script from 'next/script'
+import { Analytics } from '@vercel/analytics/next'
 import SmoothScroll from '@/components/SmoothScroll'
 import './globals.css'
 
@@ -46,6 +48,21 @@ export default function RootLayout({
       <html lang="en" className={`${playfair.variable} ${dmSans.variable} ${caveat.variable}`} suppressHydrationWarning>
       <body className="font-sans antialiased" suppressHydrationWarning>
         <SmoothScroll>{children}</SmoothScroll>
+        <Script id="microsoft-clarity" strategy="afterInteractive">
+          {`
+            (function (clarityWindow, clarityDocument, clarityKey, scriptTag, projectId) {
+              clarityWindow[clarityKey] = clarityWindow[clarityKey] || function () {
+                (clarityWindow[clarityKey].q = clarityWindow[clarityKey].q || []).push(arguments);
+              };
+              var clarityScript = clarityDocument.createElement(scriptTag);
+              clarityScript.async = true;
+              clarityScript.src = "https://www.clarity.ms/tag/" + projectId;
+              var firstScript = clarityDocument.getElementsByTagName(scriptTag)[0];
+              firstScript.parentNode.insertBefore(clarityScript, firstScript);
+            })(window, document, "clarity", "script", "z3mgob98e7");
+          `}
+        </Script>
+        <Analytics />
       </body>
     </html>
   )
