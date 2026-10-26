@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Playfair_Display, DM_Sans, Caveat } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
 import SmoothScroll from '@/components/SmoothScroll'
 import './globals.css'
 
@@ -46,6 +47,7 @@ export default function RootLayout({
       <html lang="en" className={`${playfair.variable} ${dmSans.variable} ${caveat.variable}`} suppressHydrationWarning>
       <body className="font-sans antialiased" suppressHydrationWarning>
         <SmoothScroll>{children}</SmoothScroll>
+        <Analytics />
       </body>
     </html>
   )
